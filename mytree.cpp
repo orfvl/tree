@@ -8,15 +8,16 @@ template <typename T> class mytree
 {
 private:
     T value {0};
-    unique_ptr<mytree> leftChild {};
-    unique_ptr<mytree> rightChild {};
+    shared_ptr<mytree> leftChild {};
+    shared_ptr<mytree> rightChild {};
+    weak_ptr<mytree> parent {};
 public:
     mytree() = default;
-    explicit mytree(T nodeValue); //core guide line C??
-    mytree(mytree const& other) = delete; //must be implemented 
-    mytree& operator=(mytree const& other) = delete; //must be implemented 
-    mytree(mytree && other) noexcept = delete;
-    mytree & operator=(mytree && other) noexcept = delete;
+    explicit mytree(T nodeValue); //make 1 argument constuctor explicit core guide line C??
+    mytree(mytree const& other) = default; //mustnt be implemented rule 0?
+    mytree& operator=(mytree const& other) = default;  
+    mytree(mytree && other) noexcept = default;
+    mytree & operator=(mytree && other) noexcept = default;
     ~mytree() = default;
 
     void addChild(T childValue);
@@ -28,7 +29,6 @@ template <typename T> mytree<T>::mytree(T nodeValue)
     : value{nodeValue}
     {
     };
-
 
 template <typename T> void mytree<T>::addChild(T childValue)
     {
@@ -77,5 +77,10 @@ int main()
     mytree<int> head(10);
     head.addChild(20);
     head.addChild(5);
+    head.print();
+
+    mytree<int> t(head);
+    t.addChild(7);
+    head = t;
     head.print();
 }
